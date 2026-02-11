@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate, Link } from 'react-router-dom';
+
 
 
 const Login = () => {
@@ -26,7 +27,7 @@ const Login = () => {
             if (response.ok) {
                 setMessage('Login successful!');
                 localStorage.setItem('access_token', data.access_token);
-                setTimeout(() => navigate('/'), 2000);
+                setTimeout(() => navigate('/dashboard'), 2000);
             } else {
                 setMessage(`Error: ${data.detail || 'Invalid credentials'}`);
             }
@@ -127,8 +128,11 @@ const Login = () => {
 
                 <p className="mt-6 text-center text-sm text-gray-600">
                     Not a member?{' '}
-                    <a href="#" className="font-medium text-indigo-600 hover:text-indigo-500">Start a 14-day free trial</a>
+                    <Link to="/signup" className="font-medium text-indigo-600 hover:text-indigo-500">
+                        Sign up now
+                    </Link>
                 </p>
+
             </div>
         </div>
     );
