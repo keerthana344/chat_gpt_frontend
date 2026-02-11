@@ -7,24 +7,25 @@ const Header = () => {
     const handleLogout = () => {
         localStorage.removeItem('access_token');
         navigate('/login');
-        window.location.reload(); // Refresh to update header state
+        window.location.reload();
     };
 
     return (
-        <nav style={{ padding: '1rem', backgroundColor: '#333', marginBottom: '1rem', display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
-            <div>
-                <Link to="/" style={{ color: 'white', marginRight: '1rem', fontWeight: 'bold' }}>DashVite</Link>
-                <Link to="/about" style={{ color: 'white', marginRight: '1rem' }}>About</Link>
-                <Link to="/contact" style={{ color: 'white', marginRight: '1rem' }}>Contact</Link>
-                {isLoggedIn && <Link to="/dashboard" style={{ color: 'white', marginRight: '1rem' }}>Dashboard</Link>}
+        <nav className="bg-[#1a1a1a] text-white px-6 py-4 flex justify-between items-center shadow-md">
+            <div className="flex items-center space-x-6 text-sm font-medium">
+                <Link to="/" className="text-lg font-bold mr-2 hover:text-gray-300 transition">DashVite</Link>
+                <Link to="/about" className="hover:text-gray-300 transition">About</Link>
+                <Link to="/contact" className="hover:text-gray-300 transition">Contact</Link>
+                {isLoggedIn && <Link to="/dashboard" className="hover:text-gray-300 transition">Dashboard</Link>}
             </div>
-            <div>
-                <Link to="/login" style={{ color: 'white', marginRight: '1rem' }}>Login</Link>
-                <Link to="/signup" style={{ color: 'white', marginRight: '1rem' }}>Signup</Link>
+
+            <div className="flex items-center space-x-6 text-sm font-medium">
+                <Link to="/login" className="hover:text-gray-300 transition">Login</Link>
+                <Link to="/signup" className="hover:text-gray-300 transition">Signup</Link>
                 {isLoggedIn && (
                     <button
                         onClick={handleLogout}
-                        style={{ background: 'none', border: 'none', color: '#ff4d4d', cursor: 'pointer', fontWeight: 'bold' }}
+                        className="text-red-500 font-bold hover:text-red-400 transition"
                     >
                         Logout
                     </button>
@@ -34,6 +35,5 @@ const Header = () => {
         </nav>
     );
 };
-
 
 export default Header;
