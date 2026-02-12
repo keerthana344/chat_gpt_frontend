@@ -42,7 +42,9 @@ const Chat = () => {
                 try {
                     console.log("Syncing user profile...");
                     const profileRes = await fetch('/api/users/me', {
-                        headers: { 'Authorization': `Bearer ${token}` }
+                        headers: {
+                            'Authorization': `Bearer ${token}`
+                        }
                     });
                     if (profileRes.ok) {
                         const profile = await profileRes.json();
@@ -67,8 +69,17 @@ const Chat = () => {
                 setHistoryLoading(true);
                 setHistoryError(null);
                 try {
-                    console.log(`Fetching history for user: ${currentUserId}`);
-                    const response = await fetch(`/api/history/${currentUserId}`);
+                    console.log(`Fetching history using token`);
+                    const response = await fetch(`/api/history/`, {
+                        headers: {
+                            'Authorization': `Bearer ${token}`
+                        }
+                    });
+                    if (response.status === 401) {
+                        localStorage.removeItem('access_token');
+                        window.location.href = '/login';
+                        return;
+                    }
                     if (response.ok) {
                         const data = await response.json();
                         console.log("History fetched:", data.length, "messages");
@@ -128,12 +139,18 @@ const Chat = () => {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json',
+                    'Authorization': `Bearer ${localStorage.getItem('access_token')}`
                 },
                 body: JSON.stringify({
-                    message: text,
-                    user_id: userId ? parseInt(userId) : null
+                    message: text
                 }),
             });
+
+            if (response.status === 401) {
+                localStorage.removeItem('access_token');
+                window.location.href = '/login';
+                return;
+            }
 
             if (!response.ok) {
                 throw new Error('Failed to get response from AI');
@@ -149,9 +166,13 @@ const Chat = () => {
             setMessages(prev => [...prev, aiMessage]);
 
             // Refresh history list if logged in
-            if (isLoggedIn && userId) {
+            if (isLoggedIn) {
                 try {
-                    const histRes = await fetch(`/api/history/${userId}`);
+                    const histRes = await fetch(`/api/history/`, {
+                        headers: {
+                            'Authorization': `Bearer ${localStorage.getItem('access_token')}`
+                        }
+                    });
                     if (histRes.ok) {
                         const histData = await histRes.json();
                         setHistory(histData);
