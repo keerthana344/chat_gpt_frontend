@@ -8,7 +8,7 @@ const Header = () => {
         const userId = localStorage.getItem('user_id');
         if (userId) {
             try {
-                await fetch('http://127.0.0.1:8000/logout', {
+                await fetch('/api/logout', {
                     method: 'POST',
                     headers: { 'Content-Type': 'application/json' },
                     body: JSON.stringify({ user_id: parseInt(userId) })

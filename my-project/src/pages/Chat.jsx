@@ -41,7 +41,7 @@ const Chat = () => {
             if (token && !currentUserId) {
                 try {
                     console.log("Syncing user profile...");
-                    const profileRes = await fetch('http://127.0.0.1:8000/users/me', {
+                    const profileRes = await fetch('/api/users/me', {
                         headers: { 'Authorization': `Bearer ${token}` }
                     });
                     if (profileRes.ok) {
@@ -51,10 +51,14 @@ const Chat = () => {
                         setUserId(profile.id);
                         currentUserId = profile.id;
                     } else {
-                        console.warn("Profile sync failed with status:", profileRes.status);
+                        // Silently fail if backend is not available
+                        if (profileRes.status !== 401) {
+                            console.warn("Profile sync failed with status:", profileRes.status);
+                        }
                     }
                 } catch (err) {
-                    console.error("Profile sync error:", err);
+                    // Backend not available - this is okay for guest mode
+                    console.log("Backend not available, continuing in guest mode");
                 }
             }
 
@@ -64,7 +68,7 @@ const Chat = () => {
                 setHistoryError(null);
                 try {
                     console.log(`Fetching history for user: ${currentUserId}`);
-                    const response = await fetch(`http://127.0.0.1:8000/history/${currentUserId}`);
+                    const response = await fetch(`/api/history/${currentUserId}`);
                     if (response.ok) {
                         const data = await response.json();
                         console.log("History fetched:", data.length, "messages");
@@ -75,12 +79,15 @@ const Chat = () => {
                             sender: m.sender
                         })));
                     } else {
-                        const errData = await response.json();
-                        setHistoryError(`Failed to load history: ${errData.detail || response.statusText}`);
+                        // Only show error if it's not a connection issue
+                        if (response.status !== 401 && response.status !== 404) {
+                            const errData = await response.json().catch(() => ({}));
+                            setHistoryError(`Failed to load history: ${errData.detail || response.statusText}`);
+                        }
                     }
                 } catch (error) {
-                    console.error("History fetch error:", error);
-                    setHistoryError("Cannot connect to history server.");
+                    // Backend not available - this is expected if server isn't running
+                    console.log("Backend not available for history");
                 } finally {
                     setHistoryLoading(false);
                 }
@@ -117,7 +124,7 @@ const Chat = () => {
         setIsTyping(true);
 
         try {
-            const response = await fetch('http://127.0.0.1:8000/ask', {
+            const response = await fetch('/api/ask', {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json',
@@ -143,17 +150,22 @@ const Chat = () => {
 
             // Refresh history list if logged in
             if (isLoggedIn && userId) {
-                const histRes = await fetch(`http://127.0.0.1:8000/history/${userId}`);
-                if (histRes.ok) {
-                    const histData = await histRes.json();
-                    setHistory(histData);
+                try {
+                    const histRes = await fetch(`/api/history/${userId}`);
+                    if (histRes.ok) {
+                        const histData = await histRes.json();
+                        setHistory(histData);
+                    }
+                } catch (err) {
+                    // Silently fail - history refresh is not critical
+                    console.log("Could not refresh history");
                 }
             }
         } catch (error) {
             console.error('AI Error:', error);
             const errorMessage = {
                 id: Date.now() + 1,
-                text: "I'm sorry, I'm having trouble connecting to my brain right now. Please make sure the backend server is running and try again.",
+                text: "I'm sorry, I'm having trouble connecting to my brain right now. Please make sure the backend server is running at http://127.0.0.1:8000 and try again.",
                 sender: 'ai'
             };
             setMessages(prev => [...prev, errorMessage]);
