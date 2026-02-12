@@ -8,6 +8,7 @@ import Footer from './components/footer'
 import Login from './pages/login'
 import Signup from './pages/signup'
 import Dashboard from './pages/Dashboard'
+import Chat from './pages/Chat'
 
 function App() {
   return (
@@ -21,6 +22,7 @@ function App() {
         <Route path="/login" element={<Login />} />
         <Route path="/signup" element={<Signup />} />
         <Route path="/dashboard" element={<Dashboard />} />
+        <Route path="/chat" element={<Chat />} />
       </Routes>
       <Footer />
     </Router>

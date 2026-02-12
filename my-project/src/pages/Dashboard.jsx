@@ -1,18 +1,13 @@
 import React, { useState, useEffect } from 'react';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate, Link } from 'react-router-dom';
 
 const Dashboard = () => {
     const navigate = useNavigate();
     const [user, setUser] = useState({ name: 'User', email: '' });
 
     useEffect(() => {
-        // Simple authentication check
-        const token = localStorage.getItem('access_token');
-        if (!token) {
-            navigate('/login');
-        }
-        // In a real app, you'd fetch user data here
-    }, [navigate]);
+        // Dashboard is now public
+    }, []);
 
     const handleLogout = () => {
         localStorage.removeItem('access_token');
@@ -34,23 +29,26 @@ const Dashboard = () => {
 
     return (
         <div className="min-h-screen bg-gray-50 flex">
-            {/* Sidebar */}
-            <aside className="w-64 bg-[#2e2b85] text-white flex flex-col">
-                <div className="p-6 text-2xl font-bold border-b border-[#3b3a99] flex items-center gap-2">
+            <aside className="w-64 bg-[#1a1a1a] text-white flex flex-col fixed top-0 left-0 bottom-0 z-40">
+                <div className="p-8 text-2xl font-black border-b border-white/5 flex items-center gap-3">
                     <span className="text-3xl">🚀</span> DashVite
                 </div>
-                <nav className="flex-grow p-4 space-y-2 mt-4">
-                    <a href="#" className="block px-6 py-3 rounded-xl bg-[#413fc4] text-white font-semibold">Dashboard</a>
-                    <a href="#" className="block px-6 py-3 rounded-xl hover:bg-[#3b3a99] transition text-gray-300 hover:text-white">Analytics</a>
-                    <a href="#" className="block px-6 py-3 rounded-xl hover:bg-[#3b3a99] transition text-gray-300 hover:text-white">Settings</a>
+                <nav className="flex-grow p-4 space-y-2 mt-6">
+                    <Link to="/dashboard" className="block px-6 py-3 rounded-xl bg-indigo-600/10 text-indigo-400 font-bold border border-indigo-600/20">Dashboard</Link>
+                    <Link to="/chat" className="flex items-center gap-3 px-6 py-3 rounded-xl hover:bg-white/5 transition text-gray-400 hover:text-white group">
+                        <span className="w-2 h-2 bg-indigo-500 rounded-full group-hover:animate-pulse"></span>
+                        Ask AI
+                    </Link>
+                    <a href="#" className="block px-6 py-3 rounded-xl hover:bg-white/5 transition text-gray-400 hover:text-white">Analytics</a>
+                    <a href="#" className="block px-6 py-3 rounded-xl hover:bg-white/5 transition text-gray-400 hover:text-white">Settings</a>
                 </nav>
             </aside>
 
             {/* Main Content */}
-            <main className="flex-grow p-10">
-                <header className="mb-10">
-                    <h1 className="text-4xl font-bold text-gray-900 mb-2">Welcome Back, User!</h1>
-                    <p className="text-lg text-gray-500">Here is what is happening with your account today.</p>
+            <main className="flex-grow p-10 ml-64 mt-16 bg-[#f8fafc]/50">
+                <header className="mb-12">
+                    <h1 className="text-5xl font-black text-slate-900 mb-3 tracking-tight">Welcome Back, User!</h1>
+                    <p className="text-xl text-slate-500 font-medium">Here's what's happening with your workspace today.</p>
                 </header>
 
                 {/* Stats Grid */}
@@ -85,18 +83,37 @@ const Dashboard = () => {
                         </div>
                     </div>
 
+                    {/* AI Insights - New Section */}
+                    <div className="bg-gradient-to-br from-indigo-600 to-purple-700 rounded-3xl shadow-xl p-10 text-white relative overflow-hidden">
+                        <div className="relative z-10">
+                            <h3 className="text-2xl font-black mb-4">AI Power Insights</h3>
+                            <p className="text-indigo-100 mb-8 text-lg font-medium leading-relaxed">
+                                Your productivity is up 24% this week. Ask AI to analyze your recent project performance.
+                            </p>
+                            <Link
+                                to="/chat"
+                                className="inline-flex items-center gap-3 px-8 py-3 bg-white text-indigo-600 rounded-2xl font-bold hover:bg-indigo-50 transition-colors shadow-lg"
+                            >
+                                Start Chatting
+                                <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M14 5l7 7m0 0l-7 7m7-7H3" /></svg>
+                            </Link>
+                        </div>
+                        {/* Decorative background element */}
+                        <div className="absolute -right-20 -bottom-20 w-64 h-64 bg-white/10 rounded-full blur-3xl"></div>
+                    </div>
+
                     {/* Quick Tools */}
-                    <div className="bg-white rounded-3xl shadow-sm border border-gray-100 p-10">
-                        <h3 className="text-2xl font-black text-gray-900 mb-8">Quick Tools</h3>
-                        <div className="space-y-6">
-                            <button className="w-full flex items-center justify-between p-6 rounded-2xl border border-blue-50 hover:bg-blue-50 transition font-bold text-gray-800 text-lg">
+                    <div className="bg-white rounded-3xl shadow-sm border border-slate-100 p-10">
+                        <h3 className="text-2xl font-black text-slate-900 mb-8 font-display tracking-tight">Quick Tools</h3>
+                        <div className="space-y-4">
+                            <button className="w-full flex items-center justify-between p-5 rounded-2xl border border-slate-100 hover:border-indigo-100 hover:bg-slate-50 transition-all font-bold text-slate-700">
                                 <span className="flex items-center gap-4">📊 Generate Report</span>
                             </button>
-                            <button className="w-full flex items-center justify-between p-6 rounded-2xl border border-blue-50 hover:bg-blue-50 transition font-bold text-gray-800 text-lg">
+                            <button className="w-full flex items-center justify-between p-5 rounded-2xl border border-slate-100 hover:border-indigo-100 hover:bg-slate-50 transition-all font-bold text-slate-700">
                                 <span className="flex items-center gap-4">🛠️ Account Audit</span>
                             </button>
-                            <button className="w-full flex items-center justify-between p-6 rounded-2xl border border-blue-50 hover:bg-blue-50 transition font-bold text-gray-800 text-lg">
-                                <span className="flex items-center gap-4">🔑 security Check</span>
+                            <button className="w-full flex items-center justify-between p-5 rounded-2xl border border-slate-100 hover:border-indigo-100 hover:bg-slate-50 transition-all font-bold text-slate-700">
+                                <span className="flex items-center gap-4">🔑 Security Check</span>
                             </button>
                         </div>
                     </div>

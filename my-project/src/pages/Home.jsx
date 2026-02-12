@@ -1,27 +1,45 @@
-import React from "react";
-import { Link } from "react-router-dom";
+import React, { useState } from "react";
+import { Link, useNavigate } from "react-router-dom";
 
 const Home = () => {
+  const [query, setQuery] = useState('');
+  const navigate = useNavigate();
+
+  const handleSearch = (e) => {
+    e.preventDefault();
+    if (query.trim()) {
+      navigate(`/chat?q=${encodeURIComponent(query)}`);
+    }
+  };
+
   return (
-    <div className="min-h-screen bg-white flex flex-col items-center justify-center px-4 -mt-16">
-      <div className="text-center mb-12">
-        <h1 className="text-4xl md:text-5xl font-bold text-gray-900 mb-4">
-          What can I help with?
+    <div className="min-h-screen bg-[#f8fafc] flex flex-col items-center justify-center px-4 pt-20">
+      <div className="text-center mb-16 max-w-3xl animate-in fade-in zoom-in duration-700">
+        <div className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-indigo-50 text-indigo-600 font-bold text-sm mb-8 border border-indigo-100">
+          <span className="relative flex h-2 w-2">
+            <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-indigo-400 opacity-75"></span>
+            <span className="relative inline-flex rounded-full h-2 w-2 bg-indigo-500"></span>
+          </span>
+          Next-Gen Intelligence
+        </div>
+        <h1 className="text-6xl md:text-7xl font-black text-slate-900 mb-6 tracking-tight leading-tight">
+          What can I help <br />
+          <span className="bg-gradient-to-r from-indigo-600 to-purple-600 bg-clip-text text-transparent">with today?</span>
         </h1>
-        <p className="text-lg text-gray-600 max-w-lg mx-auto">
-          Experience the future of productivity with DashVite.
-          Start your journey today.
+        <p className="text-xl text-slate-500 max-w-xl mx-auto font-medium">
+          Experience the future of productivity with DashVite AI.
+          The smartest way to manage your workspace.
         </p>
-        <div className="mt-8 flex gap-4 justify-center">
+        <div className="mt-10 flex gap-4 justify-center">
           <Link
             to="/signup"
-            className="px-8 py-3 bg-indigo-600 text-white rounded-xl font-semibold shadow-lg hover:bg-indigo-700 transition transform hover:-translate-y-0.5"
+            className="px-10 py-4 bg-indigo-600 text-white rounded-2xl font-black shadow-xl shadow-indigo-200 hover:bg-indigo-700 hover:-translate-y-1 transition-all duration-300"
           >
             Get Started
           </Link>
           <Link
             to="/login"
-            className="px-8 py-3 bg-white text-gray-700 border border-gray-200 rounded-xl font-semibold shadow-sm hover:bg-gray-50 transition transform hover:-translate-y-0.5"
+            className="px-10 py-4 bg-white text-slate-900 border border-slate-200 rounded-2xl font-black shadow-lg hover:bg-slate-50 hover:-translate-y-1 transition-all duration-300"
           >
             Sign In
           </Link>
@@ -29,34 +47,47 @@ const Home = () => {
       </div>
 
       {/* Input box */}
-      <div className="w-full max-w-2xl">
-        <div className="flex items-center gap-2 border border-gray-200 rounded-2xl px-4 py-4 shadow-sm focus-within:ring-2 focus-within:ring-indigo-100 transition">
+      <div className="w-full max-w-3xl transform hover:scale-[1.01] transition-all duration-300">
+        <form onSubmit={handleSearch} className="glass p-2 rounded-[2.5rem] flex items-center shadow-2xl border border-slate-200 bg-white">
           <input
             type="text"
-            placeholder="Ask anything..."
-            className="flex-1 outline-none text-gray-700 placeholder-gray-400 text-lg"
+            value={query}
+            onChange={(e) => setQuery(e.target.value)}
+            placeholder="Ask anything about your projects..."
+            className="flex-1 bg-transparent border-none outline-none px-8 py-5 text-slate-700 placeholder-slate-400 text-xl font-medium"
           />
-          <button className="p-2 bg-gray-900 text-white rounded-xl hover:bg-gray-800">
-            <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M14 5l7 7m0 0l-7 7m7-7H3" /></svg>
+          <button
+            type="submit"
+            className="p-4 bg-slate-900 text-white rounded-[2rem] hover:bg-slate-800 transition-all shadow-xl mr-2"
+          >
+            <svg className="w-8 h-8" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2.5" d="M14 5l7 7m0 0l-7 7m7-7H3" />
+            </svg>
           </button>
-        </div>
+        </form>
 
         {/* Action buttons */}
-        <div className="flex flex-wrap gap-3 mt-6 justify-center">
-          {["Attach", "Search", "Study", "Create image"].map((item) => (
+        <div className="flex flex-wrap gap-4 mt-8 justify-center">
+          {[
+            { label: "Attach", icon: "📎" },
+            { label: "Search", icon: "🔍" },
+            { label: "Deep Study", icon: "🧠" },
+            { label: "Create image", icon: "🎨" }
+          ].map((item) => (
             <button
-              key={item}
-              className="px-5 py-2 text-sm border border-gray-200 rounded-full text-gray-600 hover:bg-gray-50 hover:border-gray-300 transition"
+              key={item.label}
+              className="px-6 py-3 text-sm font-bold border border-slate-200 rounded-2xl text-slate-600 bg-white hover:bg-slate-50 hover:border-indigo-200 transition-all flex items-center gap-2 shadow-sm"
             >
-              {item}
+              <span>{item.icon}</span>
+              {item.label}
             </button>
           ))}
         </div>
       </div>
 
       {/* Footer text */}
-      <p className="text-xs text-gray-400 mt-16 text-center max-w-sm">
-        By messaging DashVite, you agree to our <a href="#" className="underline">Terms</a> and have read our <a href="#" className="underline">Privacy Policy</a>.
+      <p className="text-xs font-bold text-slate-400 mt-20 text-center max-w-sm tracking-wide uppercase">
+        Built for the future of work
       </p>
     </div>
   );
