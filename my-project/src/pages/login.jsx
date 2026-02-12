@@ -27,6 +27,7 @@ const Login = () => {
             if (response.ok) {
                 setMessage('Successfully logged in!');
                 localStorage.setItem('access_token', data.access_token);
+                localStorage.setItem('user_id', data.user_id);
                 setTimeout(() => navigate('/dashboard'), 1500);
             } else {
                 setMessage(`Error: ${data.detail || 'Invalid credentials'}`);

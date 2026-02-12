@@ -4,6 +4,7 @@ import { useNavigate, Link } from 'react-router-dom';
 const Dashboard = () => {
     const navigate = useNavigate();
     const [user, setUser] = useState({ name: 'User', email: '' });
+    const isLoggedIn = !!localStorage.getItem('access_token');
 
     useEffect(() => {
         // Dashboard is now public
@@ -42,6 +43,15 @@ const Dashboard = () => {
                     <a href="#" className="block px-6 py-3 rounded-xl hover:bg-white/5 transition text-gray-400 hover:text-white">Analytics</a>
                     <a href="#" className="block px-6 py-3 rounded-xl hover:bg-white/5 transition text-gray-400 hover:text-white">Settings</a>
                 </nav>
+
+                {/* Sidebar Auth CTA for Guests */}
+                {!isLoggedIn && (
+                    <div className="p-6 m-4 bg-indigo-600/10 rounded-2xl border border-indigo-500/20">
+                        <p className="text-sm font-bold text-indigo-400 mb-4 text-center">Unlock Full Power</p>
+                        <Link to="/signup" className="block w-full py-2 bg-indigo-600 text-white rounded-xl text-center text-sm font-black hover:bg-indigo-700 transition-colors mb-2">Join Now</Link>
+                        <Link to="/login" className="block w-full py-2 bg-white/5 text-slate-300 rounded-xl text-center text-sm font-bold hover:bg-white/10 transition-colors">Sign In</Link>
+                    </div>
+                )}
             </aside>
 
             {/* Main Content */}

@@ -4,8 +4,21 @@ const Header = () => {
     const navigate = useNavigate();
     const isLoggedIn = !!localStorage.getItem('access_token');
 
-    const handleLogout = () => {
+    const handleLogout = async () => {
+        const userId = localStorage.getItem('user_id');
+        if (userId) {
+            try {
+                await fetch('http://127.0.0.1:8000/logout', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ user_id: parseInt(userId) })
+                });
+            } catch (err) {
+                console.error("Failed to log logout:", err);
+            }
+        }
         localStorage.removeItem('access_token');
+        localStorage.removeItem('user_id');
         navigate('/login');
         window.location.reload();
     };
@@ -24,12 +37,13 @@ const Header = () => {
             </div>
 
             <div className="flex items-center space-x-6 text-sm font-medium">
-                {!isLoggedIn ? (
+                {!isLoggedIn && (
                     <>
                         <Link to="/login" className="text-gray-400 hover:text-white transition-colors">Login</Link>
-                        <Link to="/signup" className="px-5 py-2 bg-indigo-600 hover:bg-indigo-700 text-white rounded-xl transition-all shadow-lg shadow-indigo-500/20">Get Started</Link>
+                        <Link to="/signup" className="px-5 py-2 bg-indigo-600 hover:bg-indigo-700 text-white rounded-xl transition-all shadow-lg shadow-indigo-500/20">Signup</Link>
                     </>
-                ) : (
+                )}
+                {isLoggedIn && (
                     <button
                         onClick={handleLogout}
                         className="text-gray-400 hover:text-red-400 transition-colors flex items-center gap-2"

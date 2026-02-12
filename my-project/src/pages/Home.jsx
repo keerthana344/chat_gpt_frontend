@@ -85,6 +85,25 @@ const Home = () => {
         </div>
       </div>
 
+      {/* Auth Links for Guests */}
+      {!localStorage.getItem('access_token') && (
+        <div className="mt-12 flex gap-6 items-center animate-in fade-in slide-in-from-bottom-2 duration-1000">
+          <Link
+            to="/signup"
+            className="text-indigo-600 font-bold hover:underline underline-offset-4"
+          >
+            New to DashVite? Sign up
+          </Link>
+          <div className="w-1.5 h-1.5 bg-slate-200 rounded-full"></div>
+          <Link
+            to="/login"
+            className="text-slate-600 font-bold hover:text-slate-900"
+          >
+            Already have an account? Sign In
+          </Link>
+        </div>
+      )}
+
       {/* Footer text */}
       <p className="text-xs font-bold text-slate-400 mt-20 text-center max-w-sm tracking-wide uppercase">
         Built for the future of work
