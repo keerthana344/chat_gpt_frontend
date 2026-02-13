@@ -8,7 +8,8 @@ const Header = () => {
         const userId = localStorage.getItem('user_id');
         if (userId) {
             try {
-                await fetch('/api/logout', {
+                const apiBase = import.meta.env.VITE_API_BASE || '';
+                await fetch(`${apiBase}/api/logout`, {
                     method: 'POST',
                     headers: { 'Content-Type': 'application/json' },
                     body: JSON.stringify({ user_id: parseInt(userId) })
