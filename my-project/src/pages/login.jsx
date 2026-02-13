@@ -13,8 +13,9 @@ const Login = () => {
         setIsLoading(true);
         setMessage('');
 
+        const apiBase = import.meta.env.VITE_API_BASE || '';
         try {
-            const response = await fetch('/api/login', {
+            const response = await fetch(`${apiBase}/api/login`, {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json',

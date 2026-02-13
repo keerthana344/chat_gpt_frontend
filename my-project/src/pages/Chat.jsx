@@ -41,7 +41,8 @@ const Chat = () => {
             if (token && !currentUserId) {
                 try {
                     console.log("Syncing user profile...");
-                    const profileRes = await fetch('/api/users/me', {
+                    const apiBase = import.meta.env.VITE_API_BASE || '';
+                    const profileRes = await fetch(`${apiBase}/api/users/me`, {
                         headers: {
                             'Authorization': `Bearer ${token}`
                         }
@@ -70,7 +71,8 @@ const Chat = () => {
                 setHistoryError(null);
                 try {
                     console.log(`Fetching history using token`);
-                    const response = await fetch(`/api/history/`, {
+                    const apiBase = import.meta.env.VITE_API_BASE || '';
+                    const response = await fetch(`${apiBase}/api/history/`, {
                         headers: {
                             'Authorization': `Bearer ${token}`
                         }
@@ -134,8 +136,9 @@ const Chat = () => {
         setInput('');
         setIsTyping(true);
 
+        const apiBase = import.meta.env.VITE_API_BASE || '';
         try {
-            const response = await fetch('/api/ask', {
+            const response = await fetch(`${apiBase}/api/ask`, {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json',
@@ -168,7 +171,8 @@ const Chat = () => {
             // Refresh history list if logged in
             if (isLoggedIn) {
                 try {
-                    const histRes = await fetch(`/api/history/`, {
+                    const apiBase = import.meta.env.VITE_API_BASE || '';
+                    const histRes = await fetch(`${apiBase}/api/history/`, {
                         headers: {
                             'Authorization': `Bearer ${localStorage.getItem('access_token')}`
                         }

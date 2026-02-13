@@ -35,8 +35,9 @@ const Signup = () => {
         setIsLoading(true);
         setMessage('');
 
+        const apiBase = import.meta.env.VITE_API_BASE || '';
         try {
-            const response = await fetch('/api/signup', {
+            const response = await fetch(`${apiBase}/api/signup`, {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json',
